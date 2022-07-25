@@ -63,7 +63,7 @@
                   type="success"
                   size="mini"
                   icon="el-icon-plus"
-                  @click="addSku()"
+                  @click="addSku"
                 ></el-button>
               </el-tooltip>
               <el-tooltip
@@ -120,7 +120,7 @@
         </el-pagination>
       </div>
       <!-- 场景1  添加SPU|修改SPU-->
-      <SpuForm v-show="scene == 1" ref="spu"/>
+      <SpuForm v-show="scene == 1" @changeScene="changeScene" ref="spu"/>
       <!-- 场景2 添加SKU-->
       <SkuForm v-show="scene == 2" />
     </el-card>
@@ -195,17 +195,46 @@ export default {
       this.limit = limit;
       this.getSpuList();
     },
+
+    //子组件业务
+    //SPUForm自定义事件的回调
+    changeScene({scene,flag}){
+      //切换场景
+      this.scene = scene;
+      //再次获取最新的类的数据
+      // 当CV切换场景的时候，如果修改，留在当前页、如果添加留在第一个
+      if(flag == '修改'){
+        this.getSpuList(this.page);
+      }else{
+        this.getSpuList();
+      }
+    },
     //添加SPu
     addSpu() {
       this.scene = 1;
-      // this.$refs.spu.initSpuDAta(this.category3Id);
+      this.$refs.spu.initSpuData(this.category3Id);
     },
     //修改某一个spu
     updateSpu(row) {
        this.scene = 1;
+       this.$refs.spu.initData(row);
+    },
+     async deleteSpu(row) {
+      try {
+        await this.$API.spu.reqDeleteSpu(row.id);
+        //获取数据
+        this.getSpuList(this.records.length>1?this.page:this.page-1);
+        //提示信息
+        this.$message({ type: "success", message: "删除成功" });
+      } catch (error) {
+        
+      }
+     },
+
+    addSku(){
     },
     lookSku() {},
-    deleteSpu() {},
+   
   },
 };
 </script>

@@ -24,7 +24,7 @@ export const reqTrademarkList = () =>
     method: "get",
   });
 
-//获取项目中全部的销售属性---[颜色、尺寸、尺码]
+//获取项目中全部的销售属性值---[颜色、尺寸、尺码]
 ///admin/product/baseSaleAttrList get
 export const reqSaleAttrList = () =>
   request({ url: `/admin/product/baseSaleAttrList`, method: "get" });
